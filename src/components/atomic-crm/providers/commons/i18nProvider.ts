@@ -6,6 +6,8 @@ import { raSupabaseEnglishMessages } from "ra-supabase-language-english";
 import { raSupabaseFrenchMessages } from "ra-supabase-language-french";
 import { englishCrmMessages } from "./englishCrmMessages";
 import { frenchCrmMessages } from "./frenchCrmMessages";
+import { germanCrmMessages } from "./germanCrmMessages";
+import { germanRaMessages, raSupabaseGermanMessages } from "./germanRaMessages";
 
 const raSupabaseEnglishMessagesOverride = {
   "ra-supabase": {
@@ -57,17 +59,34 @@ const frenchCatalog = mergeTranslations(
   frenchCrmMessages,
 );
 
-export const getInitialLocale = (): "en" | "fr" => {
+// English underneath so any key missing in German still renders
+const germanCatalog = mergeTranslations(
+  englishCatalog,
+  germanRaMessages,
+  raSupabaseGermanMessages,
+  germanCrmMessages,
+);
+
+export type Locale = "de" | "en" | "fr";
+
+export const DEFAULT_LOCALE: Locale = "de";
+
+export const getInitialLocale = (): Locale => {
   if (typeof navigator === "undefined") {
+    return DEFAULT_LOCALE;
+  }
+
+  const browserLocale = (
+    navigator.languages?.[0] ?? navigator.language
+  )?.toLowerCase();
+  if (browserLocale?.startsWith("fr")) {
+    return "fr";
+  }
+  if (browserLocale?.startsWith("en")) {
     return "en";
   }
 
-  const browserLocale = navigator.languages?.[0] ?? navigator.language;
-  if (browserLocale?.toLowerCase().startsWith("fr")) {
-    return "fr";
-  }
-
-  return "en";
+  return DEFAULT_LOCALE;
 };
 
 export const i18nProvider = polyglotI18nProvider(
@@ -75,10 +94,14 @@ export const i18nProvider = polyglotI18nProvider(
     if (locale === "fr") {
       return frenchCatalog;
     }
-    return englishCatalog;
+    if (locale === "en") {
+      return englishCatalog;
+    }
+    return germanCatalog;
   },
   getInitialLocale(),
   [
+    { locale: "de", name: "Deutsch" },
     { locale: "en", name: "English" },
     { locale: "fr", name: "Français" },
   ],

@@ -6,11 +6,18 @@ afterEach(() => {
 });
 
 describe("i18nProvider", () => {
-  it("registers en and fr locales", () => {
+  it("registers de, en and fr locales", () => {
     expect(i18nProvider.getLocales?.()).toEqual([
+      { locale: "de", name: "Deutsch" },
       { locale: "en", name: "English" },
       { locale: "fr", name: "Français" },
     ]);
+  });
+
+  it("translates the language key in german", async () => {
+    await i18nProvider.changeLocale("de");
+
+    expect(i18nProvider.translate("crm.language")).toBe("Sprache");
   });
 
   it("translates the language key in french", async () => {
@@ -19,10 +26,21 @@ describe("i18nProvider", () => {
     expect(i18nProvider.translate("crm.language")).toBe("Langue");
   });
 
-  it("falls back to english for unknown locales", async () => {
+  it("falls back to german (the company default) for unknown locales", async () => {
     await i18nProvider.changeLocale("es");
 
-    expect(i18nProvider.translate("crm.language")).toBe("Language");
+    expect(i18nProvider.translate("crm.language")).toBe("Sprache");
+  });
+
+  it("translates react-admin core keys in german", async () => {
+    await i18nProvider.changeLocale("de");
+
+    expect(i18nProvider.translate("ra.action.save")).toBe("Speichern");
+    expect(
+      i18nProvider.translate("ra-supabase.auth.sign_in_with", {
+        provider: "Google",
+      }),
+    ).toBe("Anmelden mit Google");
   });
 
   it("uses customized password reset overrides for en and fr", async () => {
@@ -54,12 +72,21 @@ describe("i18nProvider", () => {
     expect(getInitialLocale()).toBe("fr");
   });
 
-  it("falls back to english when browser locale is unsupported", () => {
+  it("uses browser english locale when available", () => {
+    vi.stubGlobal("navigator", {
+      language: "en-US",
+      languages: ["en-US"],
+    });
+
+    expect(getInitialLocale()).toBe("en");
+  });
+
+  it("falls back to german when browser locale is unsupported", () => {
     vi.stubGlobal("navigator", {
       language: "es-ES",
       languages: ["es-ES", "pt-BR"],
     });
 
-    expect(getInitialLocale()).toBe("en");
+    expect(getInitialLocale()).toBe("de");
   });
 });
