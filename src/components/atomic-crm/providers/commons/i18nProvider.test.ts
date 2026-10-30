@@ -6,10 +6,10 @@ afterEach(() => {
 });
 
 describe("i18nProvider", () => {
-  it("registers de, en and fr locales", () => {
+  it("registers en, de and fr locales with english first", () => {
     expect(i18nProvider.getLocales?.()).toEqual([
-      { locale: "de", name: "Deutsch" },
       { locale: "en", name: "English" },
+      { locale: "de", name: "Deutsch" },
       { locale: "fr", name: "Français" },
     ]);
   });
@@ -26,10 +26,10 @@ describe("i18nProvider", () => {
     expect(i18nProvider.translate("crm.language")).toBe("Langue");
   });
 
-  it("falls back to german (the company default) for unknown locales", async () => {
+  it("falls back to english for unknown locales", async () => {
     await i18nProvider.changeLocale("es");
 
-    expect(i18nProvider.translate("crm.language")).toBe("Sprache");
+    expect(i18nProvider.translate("crm.language")).toBe("Language");
   });
 
   it("translates react-admin core keys in german", async () => {
@@ -63,30 +63,12 @@ describe("i18nProvider", () => {
     );
   });
 
-  it("uses browser french locale when available", () => {
+  it("starts in english whatever the browser language", () => {
     vi.stubGlobal("navigator", {
-      language: "fr-FR",
-      languages: ["fr-FR", "en-US"],
-    });
-
-    expect(getInitialLocale()).toBe("fr");
-  });
-
-  it("uses browser english locale when available", () => {
-    vi.stubGlobal("navigator", {
-      language: "en-US",
-      languages: ["en-US"],
+      language: "de-DE",
+      languages: ["de-DE", "fr-FR"],
     });
 
     expect(getInitialLocale()).toBe("en");
-  });
-
-  it("falls back to german when browser locale is unsupported", () => {
-    vi.stubGlobal("navigator", {
-      language: "es-ES",
-      languages: ["es-ES", "pt-BR"],
-    });
-
-    expect(getInitialLocale()).toBe("de");
   });
 });

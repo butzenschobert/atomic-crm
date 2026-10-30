@@ -31,9 +31,9 @@ Useful local URLs:
 
 Order matters: companies first so contacts can link to them.
 
-1. **Companies** page → **CSV importieren** → `import/hubspot-2026-05/companies.csv`
-2. **Kontakte** page → **CSV importieren** → `import/hubspot-2026-05/contacts_ideen_butze.csv`
-3. Spot-check: Matthias Kolberg → insertEFFECT, status Heiß, tags Kunde/Entwicklung/Sales. Kathrin Albrecht → KIS CONCEPT, background "Spitzname: Khaddi".
+1. **Companies** page → **Import CSV** → `import/hubspot-2026-05/companies.csv`
+2. **Contacts** page → **Import CSV** → `import/hubspot-2026-05/contacts_ideen_butze.csv`
+3. Spot-check: Matthias Kolberg → insertEFFECT, status Hot, tags Kunde/Entwicklung/Sales. Kathrin Albrecht → KIS CONCEPT, background "Spitzname: Khaddi".
 
 `contacts_cooki_subscribers.csv` is deliberately *not* imported — those are Cooki newsletter signups, not CRM contacts.
 
@@ -57,11 +57,11 @@ Edit `src/App.tsx` (stages, categories, sectors, statuses, task types). Rules:
 - `label` is display only, change freely.
 - Removing a stage/category still in use is blocked by the Settings page validation; `App.tsx` has no such guard, so check the Deals board first.
 
-Admins can also change these lists at runtime: **Einstellungen** in the user menu. Runtime settings override `App.tsx` defaults and survive deploys.
+Admins can also change these lists at runtime: **Settings** in the user menu. Runtime settings override `App.tsx` defaults and survive deploys.
 
 ### Change translations
 
-German strings live in `src/components/atomic-crm/providers/commons/germanCrmMessages.ts` (CRM) and `germanRaMessages.ts` (framework). Key set is defined by `englishCrmMessages.ts`; `germanCrmMessages.ts` uses `satisfies CrmMessages`, so a missing key fails `make typecheck`. Switch language per user in the profile page.
+UI is English by default. German strings live in `src/components/atomic-crm/providers/commons/germanCrmMessages.ts` (CRM) and `germanRaMessages.ts` (framework). Key set is defined by `englishCrmMessages.ts`; `germanCrmMessages.ts` uses `satisfies CrmMessages`, so a missing key fails `make typecheck`. Each user switches language in the profile page; the choice is persisted per user.
 
 ---
 
@@ -107,7 +107,7 @@ Open it once: the first visit creates the production admin account (use your rea
 
 ### 2.4 Load production data
 
-Same as §1 "Load the HubSpot data", but on the production URL. Do it once. Then add Max: **Einstellungen → Benutzer → Neuer Benutzer** (needs SMTP from §2.2).
+Same as §1 "Load the HubSpot data", but on the production URL. Do it once. Then add Max: **Settings → Users → New user** (needs SMTP from §2.2).
 
 ### 2.5 Optional: CI deploy on push
 
@@ -153,12 +153,13 @@ This *does* apply pending migrations and deploy edge functions to production as 
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Login works but app shows English | Browser language not `de`, user never picked | Profile → Sprache → Deutsch (persisted per user) |
+| Want the UI in German | English is the default | Profile → Language → Deutsch (persisted per user) |
 | Invitation email never arrives | No custom SMTP | §2.2 |
 | `make prod-deploy` builds but site unchanged | `gh-pages` pushed, Pages still caching | Hard reload; check Actions tab for the Pages build |
 | Blank page at `/atomic-crm/` after deploy | `.env.production.local` missing at build time | Restore the file, redeploy |
-| Import created duplicate companies | Re-ran import without reset | Merge via Contacts → "Mit anderem Kontakt zusammenführen"; companies: delete the duplicate in UI |
-| Settings page shows old stages after `App.tsx` change | Runtime settings override defaults | Einstellungen → "Auf Standard zurücksetzen" |
+| Import created duplicate companies | Re-ran import without reset | Merge via Contacts → "Merge with another contact"; companies: delete the duplicate in UI |
+| Import "succeeds" but rows are empty / `null null` | Wrong file: raw HubSpot export instead of the mapped CSVs in `import/` | Delete the empty rows (Studio → SQL: `delete from contacts where first_name is null and last_name is null`), import the mapped files |
+| Settings page shows old stages after `App.tsx` change | Runtime settings override defaults | Settings → "Reset to Defaults" |
 | `git am` / `git commit` fails with `.lock` exists | Running git through a shell that cannot delete files | Use a normal terminal |
 
 ### Second instance (ebing)

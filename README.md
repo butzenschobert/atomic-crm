@@ -12,11 +12,11 @@ Internal CRM for Ideen-Butze, built on [Atomic CRM](https://github.com/marmelab/
 
 | Area | Change | Where |
 |---|---|---|
-| Domain config | Title, EUR, telemetry off, German labels for sectors / deal stages / categories / note statuses / task types | `src/App.tsx` |
-| Locale | Full German UI (`de`), set as default; `en` / `fr` still selectable in the profile | `src/components/atomic-crm/providers/commons/german*.ts`, `i18nProvider.ts`, `misc/RelativeDate.tsx` |
+| Domain config | Title, EUR, telemetry off, Ideen-Butze sectors / deal stages / categories / note statuses / task types | `src/App.tsx` |
+| Locale | English by default; full German UI (`de`) added and selectable per user in the profile, `fr` from upstream | `src/components/atomic-crm/providers/commons/german*.ts`, `i18nProvider.ts`, `misc/RelativeDate.tsx` |
 | Import data | Mapped HubSpot export (May 2026) ready for the CSV importer, plus the mapping script | `import/hubspot-2026-05/` |
 
-Stored values (`value` fields in `App.tsx`) stay English and must not be renamed once data exists — they live in the database. Labels can change freely. Admins can also edit these lists at runtime via **Settings** without a redeploy.
+Stored values (`value` fields in `App.tsx`) must not be renamed once data exists — they live in the database and in the import CSVs. Labels can change freely. Admins can also edit these lists at runtime via **Settings** without a redeploy.
 
 ## Quick start
 
@@ -37,7 +37,7 @@ src/components/atomic-crm/providers/commons/
   englishCrmMessages.ts                  # reference catalog (key set)
   germanCrmMessages.ts                   # German CRM strings
   germanRaMessages.ts                    # German react-admin core + Supabase auth strings
-  i18nProvider.ts                        # locale registry, de default
+  i18nProvider.ts                        # locale registry, en default
 supabase/schemas/                        # declarative DB schema (source of truth)
 supabase/migrations/                     # generated, do not hand-edit
 import/hubspot-2026-05/                  # one-off import data + mapping script

@@ -3,8 +3,8 @@ import { CRM } from "@/components/atomic-crm/root/CRM";
 /**
  * Ideen-Butze CRM configuration.
  *
- * Stored values (`value`) stay English and stable — they live in the database
- * and in import CSVs. Labels are what users see and can be German.
+ * Stored values (`value`) live in the database and in import CSVs, so they
+ * must stay stable once records exist. Labels are display only.
  * Admins can further adjust these lists at runtime via the Settings page.
  */
 const App = () => (
@@ -14,47 +14,47 @@ const App = () => (
     disableTelemetry
     companySectors={[
       { value: "it-software", label: "IT & Software" },
-      { value: "beratung", label: "Beratung" },
-      { value: "gesundheit", label: "Gesundheit & Therapie" },
-      { value: "dienstleistung", label: "Dienstleistung" },
-      { value: "bildung", label: "Bildung" },
+      { value: "beratung", label: "Consulting" },
+      { value: "gesundheit", label: "Health & Therapy" },
+      { value: "dienstleistung", label: "Services" },
+      { value: "bildung", label: "Education" },
       { value: "events", label: "Events & Marketing" },
-      { value: "handel", label: "Handel & E-Commerce" },
-      { value: "industrie", label: "Industrie & Bau" },
-      { value: "sonstiges", label: "Sonstiges" },
+      { value: "handel", label: "Retail & E-Commerce" },
+      { value: "industrie", label: "Industry & Construction" },
+      { value: "sonstiges", label: "Other" },
     ]}
     dealStages={[
       { value: "lead", label: "Lead" },
-      { value: "qualified", label: "Qualifiziert" },
-      { value: "proposal-sent", label: "Angebot gesendet" },
-      { value: "in-negotiation", label: "In Verhandlung" },
-      { value: "won", label: "Gewonnen" },
-      { value: "lost", label: "Verloren" },
-      { value: "delayed", label: "Pausiert" },
+      { value: "qualified", label: "Qualified" },
+      { value: "proposal-sent", label: "Proposal Sent" },
+      { value: "in-negotiation", label: "In Negotiation" },
+      { value: "won", label: "Won" },
+      { value: "lost", label: "Lost" },
+      { value: "delayed", label: "On Hold" },
     ]}
     dealPipelineStatuses={["won"]}
     dealCategories={[
-      { value: "web", label: "Webentwicklung" },
-      { value: "app", label: "App-Entwicklung" },
-      { value: "mvp", label: "MVP / Produktentwicklung" },
-      { value: "consulting", label: "Beratung & Workshops" },
+      { value: "web", label: "Web Development" },
+      { value: "app", label: "App Development" },
+      { value: "mvp", label: "MVP / Product Development" },
+      { value: "consulting", label: "Consulting & Workshops" },
       { value: "design", label: "Design & UX" },
-      { value: "maintenance", label: "Wartung & Betrieb" },
-      { value: "other", label: "Sonstiges" },
+      { value: "maintenance", label: "Maintenance & Operations" },
+      { value: "other", label: "Other" },
     ]}
     noteStatuses={[
-      { value: "kalt", label: "Kalt", color: "#7dbde8" },
+      { value: "kalt", label: "Cold", color: "#7dbde8" },
       { value: "warm", label: "Warm", color: "#e8cb7d" },
-      { value: "heiss", label: "Heiß", color: "#e88b7d" },
-      { value: "kunde", label: "Kunde", color: "#a4e87d" },
+      { value: "heiss", label: "Hot", color: "#e88b7d" },
+      { value: "kunde", label: "Customer", color: "#a4e87d" },
     ]}
     taskTypes={[
-      { value: "none", label: "Keine" },
-      { value: "call", label: "Anruf" },
-      { value: "email", label: "E-Mail" },
+      { value: "none", label: "None" },
+      { value: "call", label: "Call" },
+      { value: "email", label: "Email" },
       { value: "meeting", label: "Meeting" },
       { value: "demo", label: "Demo" },
-      { value: "proposal", label: "Angebot" },
+      { value: "proposal", label: "Proposal" },
       { value: "follow-up", label: "Follow-up" },
     ]}
   />

@@ -69,40 +69,26 @@ const germanCatalog = mergeTranslations(
 
 export type Locale = "de" | "en" | "fr";
 
-export const DEFAULT_LOCALE: Locale = "de";
+// English is the default regardless of browser language; users pick German or
+// French in their profile and the choice is persisted per user.
+export const DEFAULT_LOCALE: Locale = "en";
 
-export const getInitialLocale = (): Locale => {
-  if (typeof navigator === "undefined") {
-    return DEFAULT_LOCALE;
-  }
-
-  const browserLocale = (
-    navigator.languages?.[0] ?? navigator.language
-  )?.toLowerCase();
-  if (browserLocale?.startsWith("fr")) {
-    return "fr";
-  }
-  if (browserLocale?.startsWith("en")) {
-    return "en";
-  }
-
-  return DEFAULT_LOCALE;
-};
+export const getInitialLocale = (): Locale => DEFAULT_LOCALE;
 
 export const i18nProvider = polyglotI18nProvider(
   (locale) => {
+    if (locale === "de") {
+      return germanCatalog;
+    }
     if (locale === "fr") {
       return frenchCatalog;
     }
-    if (locale === "en") {
-      return englishCatalog;
-    }
-    return germanCatalog;
+    return englishCatalog;
   },
   getInitialLocale(),
   [
-    { locale: "de", name: "Deutsch" },
     { locale: "en", name: "English" },
+    { locale: "de", name: "Deutsch" },
     { locale: "fr", name: "Français" },
   ],
   { allowMissing: true },
